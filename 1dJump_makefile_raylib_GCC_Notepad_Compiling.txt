@@ -1,0 +1,15 @@
+echo > Setup required Environment
+echo -------------------------------------
+SET RAYLIB_DIR=C:\raylib
+ENV_SET PATH=$(RAYLIB_DIR)\MinGW\bin
+cd D:\Documentos\Projects\RaylibProjects\1dJump
+echo
+echo > Execute makefile
+echo -----------------------
+mingw32-make PLATFORM=PLATFORM_DESKTOP -B
+echo
+echo > Reset Environment
+echo --------------------------
+ENV_UNSET PATH
+
+cmd /c IF EXIST main.exe main.exe
