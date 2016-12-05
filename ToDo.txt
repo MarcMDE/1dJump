@@ -1,0 +1,7 @@
+- Relate alpha with gameSpeed. ("Update current relation")
+- Set reset logic + key
+- Make limit larger
+- Decrease speed increment
+- Check spawn rate increment (counter decrement)
+- Win/Lose Logic
+- Improove lvl up effect

@@ -85,7 +85,7 @@ void InitGameplayScreen(void)
     
     gameState = WAITING;
     
-    InitEffect(&effect, EFFECT_DURATION, GetScreenHeight()/2, 0, GREEN);
+    InitEffect(&effect, EFFECT_DURATION, 10);
     InitScore(&score, 0, 4, 2, GREEN, BLACK);
     
     midScreen = GetScreenWidth() / 2;
@@ -95,9 +95,30 @@ void InitGameplayScreen(void)
     //InitWalls(wallsPool, WALLS_POOL_LENGHT, WALLS_MIN_LENGHT, WALLS_MAX_LENGHT, groundPosition, WALLS_LIMIT_LENGHT, WALLS_COLOR, WALLS_LIMIT_COLOR);
 }
 
+void ResetGameplayScreen(void)
+{
+    framesCounter = 0;
+    finishScreen = 0;
+    
+    gameSpeed = 1;
+    wallsSpawnCounterMax = 60 * 1;
+    wallsSpawnCounter = wallsSpawnCounterMax;
+    
+    gameState = WAITING;
+    
+    InitEffect(&effect, EFFECT_DURATION, 10);
+    InitScore(&score, 0, 4, 2, GREEN, BLACK);
+    
+    midScreen = GetScreenWidth() / 2;
+    groundPosition = GetScreenHeight();
+    InitPlayer(&player, PLAYER_GAME_LENGHT, PLAYER_JUMP_COUNTER, PLAYER_JUMP_SPEED, GRAVITY_SPEED, BLUE);
+    InitWall(&wall, WALLS_MIN_LIMIT, WALLS_MAX_LIMIT, groundPosition, WALLS_LIMIT_LENGHT, WALLS_COLOR, WALLS_LIMIT_COLOR);
+}
+
 // Gameplay Screen Update logic
 void UpdateGameplayScreen(void)
 {   
+    //TODO: TOP AND BOT WALL (FLappyBIrd-Like)
         
     switch(gameState)
     {
@@ -132,12 +153,15 @@ void UpdateGameplayScreen(void)
             AddGravity(&player, GRAVITY_SPEED);
             SetPosition(&player);
             
-            if (PlayerWallCollisionDetection(player, wall)) gameState = DEFEAT;
             
             if (PlayerGroundCollisionDetection(player, GetScreenHeight()))
             {
                 PlayerGroundCollisionResolution(&player, groundPosition);
             }
+            
+            if (PlayerWallCollisionDetection(player, wall)) gameState = DEFEAT;
+            if (gameState != ALIVE) SetEffect(&effect, GetPlayerMidPosition(player), GetScreenHeight() - GetPlayerMidPosition(player));
+                
         
         break;
         
@@ -150,7 +174,8 @@ void UpdateGameplayScreen(void)
         
         case DEFEAT:
         
-        UpdateEffect(&effect);
+        if (UpdateEffect(&effect)) ResetGameplayScreen();
+        //if (UpdateEffect(&effect)) gameState = ALIVE;
         
         break;
         
@@ -179,8 +204,6 @@ void DrawGameplayScreen(void)
     {
         case WAITING: 
         
-        
-        
         break;
         
         case ALIVE: 
@@ -197,15 +220,22 @@ void DrawGameplayScreen(void)
         //DrawWalls(wallsPool, WALLS_POOL_LENGHT, midScreen, GAME_WIDTH);
         DrawRectangle1D(player.position - player.lenght/2, player.lenght, BLUE, midScreen, GAME_WIDTH, true);
         
-        DrawEffect(effect, GetScreenHeight()/2, midScreen, GAME_WIDTH);
+        DrawEffect(effect, GetPlayerMidPosition(player), midScreen, GAME_WIDTH, GREEN);
         
         break;
         
         case DEFEAT:
         
+        DrawWall(&wall, midScreen, GAME_WIDTH);
+        //DrawWalls(wallsPool, WALLS_POOL_LENGHT, midScreen, GAME_WIDTH);
+        DrawRectangle1D(player.position - player.lenght/2, player.lenght, BLUE, midScreen, GAME_WIDTH, true);
+        DrawEffect(effect, GetPlayerMidPosition(player), midScreen, GAME_WIDTH, RED);
+        
         break;
         
         case VICTORY:
+        
+        DrawEffect(effect, GetPlayerMidPosition(player), midScreen, GAME_WIDTH, YELLOW);
         
         break;
         

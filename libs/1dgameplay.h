@@ -7,13 +7,12 @@
 #include "ceasings.h"
 
 #define SCORE_LENGHT 3
-#define SUB_SCORE_MAX 1
+#define SUB_SCORE_MAX 2
 #define GAME_SPEED_INCREMENT 0.2f
 #define SPAWN_COUNTER_DECREMENT 5
 
 
 // STRUCTS----------------------------------------------------------------------
-
 enum GameStates {WAITING = 0, ALIVE, LEVEL_UP, DEFEAT, VICTORY};
 
 typedef struct
@@ -78,18 +77,17 @@ typedef struct
     int t;
     int d;
     int lenghtB;
-    int lenghtC;
-    int colorB;
-    int colorC;
-    int lenght;
-    Color color;
+    int lenghtUc;
+    int lenghtLc;
+    int alphaB;
+    int alphaC;
+    int lenghtU;
+    int lenghtL;
+    int alpha;
 }Effect;
-
 //------------------------------------------------------------------------------
 
-
 // FUNCTIONS--------------------------------------------------------------------
-
 // Move the position "speed" times
 void Translate(float *position, float speed);
 void DrawRectangle1D(int position, int lenght, Color color, int midScreen, int gameWidth, bool veticalOrientation);
@@ -111,11 +109,12 @@ bool PlayerWallCollisionDetection(Player p, Wall w);
 void InitScore(ScoreUI *s, int position, int subLenght, int offset, Color color, Color bgColor);
 void IncreaseScore(ScoreUI *s, float *gameSpeed, int *spawnCounter, int *gameState);
 void DrawScore(ScoreUI s, int midScreen, int gameWidth);
-void DrawEffect(Effect e, int p, int midScreen, int gameWidth);
-void InitEffect(Effect *e, int d, int lenghtC, int colorB, Color color);
+void DrawEffect(Effect e, int p, int midScreen, int gameWidth, Color color);
+void InitEffect(Effect *e, int d, int alphaB);
+void SetEffect(Effect *e, int lenghtU, int lenghtL);
 bool UpdateEffect(Effect *e);
+int GetPlayerMidPosition(Player p);
 
 //------------------------------------------------------------------------------
-
 
 //#endif

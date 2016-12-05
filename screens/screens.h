@@ -26,7 +26,7 @@
 #ifndef SCREENS_H
 #define SCREENS_H
 
-#define GAME_WIDTH 128
+#define GAME_WIDTH 32
 
 //----------------------------------------------------------------------------------
 // Types and Structures Definition
@@ -77,6 +77,7 @@ void UpdateGameplayScreen(void);
 void DrawGameplayScreen(void);
 void UnloadGameplayScreen(void);
 int FinishGameplayScreen(void);
+void ResetGameplayScreen(void);
 
 //----------------------------------------------------------------------------------
 // Ending Screen Functions Declaration

@@ -71,7 +71,7 @@ bool PlayerGroundCollisionDetection(Player p, int ground)
 
 void PlayerGroundCollisionResolution(Player *p, int ground)
 {
-    (*p).position = ground -  (*p).lenght/2;
+    (*p).position = ground - (*p).lenght/2;
     (*p).isGrounded = true;
     (*p).velocity = 0;
 }
@@ -115,15 +115,12 @@ void UpdateWalls(Wall walls[], int wallsDim, float gameSpeed)
     {
         if (walls[i].isActive)
         {
-            
             if (walls[i].position-walls[i].lenght > walls[i].limit.position)
             {
                 walls[i].lenght += gameSpeed;
-                
                 walls[i].alpha += walls[i].alphaIncrement;
                 walls[i].color.a = walls[i].alpha;
                 walls[i].limit.color.a = walls[i].alpha;
-                
             }
             else walls[i].isActive = false;
         }
@@ -136,12 +133,10 @@ bool UpdateWall(Wall *w, float gameSpeed)
     {
         if ((*w).position-(*w).lenght > (*w).limit.position)
         {
-            (*w).lenght += gameSpeed;
-            
+            (*w).lenght += gameSpeed;                                            
             (*w).alpha += (*w).alphaIncrement;
             (*w).color.a = (*w).alpha;
             (*w).limit.color.a = (*w).alpha;
-            
         }
         else 
         {
@@ -169,7 +164,7 @@ void ResetWall(Wall *w, int minLenght, int maxLenght, float gameSpeed)
     (*w).limit.position = GetRandomValue(minLenght, maxLenght);
     (*w).color.a = 0;
     (*w).limit.color.a = 0;
-    (*w).alphaIncrement = 255 / (float)((*w).position-(*w).limit.position)/gameSpeed;
+    (*w).alphaIncrement = 255 / (float)(((*w).position + (*w).lenght -(*w).limit.position)/gameSpeed);
     (*w).alpha = 0;
     (*w).isActive = true;
 }
@@ -258,40 +253,53 @@ void DrawScore(ScoreUI s, int midScreen, int gameWidth)
     }
 }
 
-void InitEffect(Effect *e, int d, int lenghtC, int colorB, Color color)
+void InitEffect(Effect *e, int d, int alphaB)
 {
     (*e).t = 0;
     (*e).d = d;
     (*e).lenghtB = 0;
-    (*e).lenghtC = lenghtC - (*e).lenghtB;
-    (*e).colorB = colorB;
-    (*e).colorC = 255 - colorB;
-    (*e).lenght = 0;
-    (*e).color = color;
-    (*e).color.a = colorB;
+    (*e).lenghtUc = 0;
+    (*e).lenghtLc = 0;
+    (*e).alphaB = 255;//alphaB;
+    (*e).alphaC = 255 - alphaB;
+    (*e).lenghtU = 0;
+    (*e).lenghtL = 0;
+    (*e).alpha = 0;
+}
+
+void SetEffect(Effect *e, int lenghtU, int lenghtL)
+{
+    (*e).t = 0;
+    (*e).lenghtUc = lenghtU;
+    (*e).lenghtLc = lenghtL;
+    (*e).lenghtU = 0;
+    (*e).lenghtL = 0;
+    (*e).alpha = 0;
 }
 
 bool UpdateEffect(Effect *e)
 {
     if ((*e).t <= (*e).d)
     {
-        (*e).lenght = (int)BounceEaseInOut((*e).t, (*e).lenghtB, (*e).lenghtC, (*e).d);
-        (*e).color.a = (int)QuadEaseIn((*e).t, (*e).colorB, (*e).colorC, (*e).d);
+        (*e).lenghtU = (int)BounceEaseInOut((*e).t, (*e).lenghtB, (*e).lenghtUc, (*e).d);
+        (*e).lenghtL = (int)BounceEaseInOut((*e).t, (*e).lenghtB, (*e).lenghtLc, (*e).d);
+        (*e).alpha = (int)QuadEaseIn((*e).t, (*e).alphaB, (*e).alphaC, (*e).d);
         (*e).t++;
         
         return false;
     }
     
-    // Reset
-    (*e).t = 0;
-    (*e).lenght = CircEaseOut((*e).t, (*e).lenghtB, (*e).lenghtC, (*e).d);
-    (*e).color.a = QuartEaseInOut((*e).t, (*e).colorB, (*e).colorC, (*e).d);
-    
     return true;
 }
 
-void DrawEffect(Effect e, int p, int midScreen, int gameWidth)
+void DrawEffect(Effect e, int p, int midScreen, int gameWidth, Color color)
 {
-    DrawRectangle1D(p, e.lenght, e.color, midScreen, gameWidth, true);
-     DrawRectangle1D(p - e.lenght, e.lenght, e.color, midScreen, gameWidth, true);
+    color.a = e.alpha;
+    DrawRectangle1D(p - e.lenghtU, e.lenghtU, color, midScreen, gameWidth, true);
+    DrawRectangle1D(p, e.lenghtL, color, midScreen, gameWidth, true);
+}
+
+int GetPlayerMidPosition(Player p)
+{
+    return p.position + p.lenght/2;
 }
