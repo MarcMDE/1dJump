@@ -29,11 +29,11 @@
 #include <stdio.h>
 
 //#define WALLS_POOL_LENGHT 3
-#define WALLS_MIN_LIMIT 200
-#define WALLS_MAX_LIMIT 300
+#define WALLS_MIN_LIMIT 300
+#define WALLS_MAX_LIMIT 400
 #define WALLS_LIMIT_LENGHT 2
-#define WALLS_COLOR RED
-#define WALLS_LIMIT_COLOR GREEN
+#define WALLS_COLOR PURPLE
+#define WALLS_LIMIT_COLOR ORANGE
 
 #define PLAYER_GAME_LENGHT 7
 #define PLAYER_JUMP_COUNTER 25
@@ -159,7 +159,7 @@ void UpdateGameplayScreen(void)
                 PlayerGroundCollisionResolution(&player, groundPosition);
             }
             
-            if (PlayerWallCollisionDetection(player, wall)) gameState = DEFEAT;
+            if (PlayerWallCollisionDetection(player, wall, GetScreenHeight())) gameState = DEFEAT;
             if (gameState != ALIVE) SetEffect(&effect, GetPlayerMidPosition(player), GetScreenHeight() - GetPlayerMidPosition(player));
                 
         
@@ -208,7 +208,7 @@ void DrawGameplayScreen(void)
         
         case ALIVE: 
        
-        DrawWall(&wall, midScreen, GAME_WIDTH);
+        DrawWall(&wall, score.lenght, midScreen, GAME_WIDTH, GetScreenHeight());
         //DrawWalls(wallsPool, WALLS_POOL_LENGHT, midScreen, GAME_WIDTH);
         DrawRectangle1D(player.position - player.lenght/2, player.lenght, BLUE, midScreen, GAME_WIDTH, true);
         
@@ -216,7 +216,7 @@ void DrawGameplayScreen(void)
         
         case LEVEL_UP:
         
-        DrawWall(&wall, midScreen, GAME_WIDTH);
+        DrawWall(&wall, score.lenght, midScreen, GAME_WIDTH, GetScreenHeight());
         //DrawWalls(wallsPool, WALLS_POOL_LENGHT, midScreen, GAME_WIDTH);
         DrawRectangle1D(player.position - player.lenght/2, player.lenght, BLUE, midScreen, GAME_WIDTH, true);
         
@@ -226,7 +226,7 @@ void DrawGameplayScreen(void)
         
         case DEFEAT:
         
-        DrawWall(&wall, midScreen, GAME_WIDTH);
+        DrawWall(&wall, score.lenght, midScreen, GAME_WIDTH, GetScreenHeight());
         //DrawWalls(wallsPool, WALLS_POOL_LENGHT, midScreen, GAME_WIDTH);
         DrawRectangle1D(player.position - player.lenght/2, player.lenght, BLUE, midScreen, GAME_WIDTH, true);
         DrawEffect(effect, GetPlayerMidPosition(player), midScreen, GAME_WIDTH, RED);

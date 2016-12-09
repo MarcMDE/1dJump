@@ -7,7 +7,7 @@
 #include "ceasings.h"
 
 #define SCORE_LENGHT 3
-#define SUB_SCORE_MAX 2
+#define SUB_SCORE_MAX 5
 #define GAME_SPEED_INCREMENT 0.2f
 #define SPAWN_COUNTER_DECREMENT 5
 
@@ -104,8 +104,8 @@ bool UpdateWall(Wall *w, float gameSpeed);
 void SpawnWall(Wall walls[], int wallsDim, int minLenght, int maxLenght, float gameSpeed);
 void ResetWall(Wall *w, int minLenght, int maxLenght, float gameSpeed);
 void DrawWalls(Wall walls[], int wallsDim, int midScreen, int gameWidth);
-void DrawWall(Wall *w, int midScreen, int gameWidth);
-bool PlayerWallCollisionDetection(Player p, Wall w);
+void DrawWall(Wall *w, int gameplayInitialPosition, int midScreen, int gameWidth, int screenHeight);
+bool PlayerWallCollisionDetection(Player p, Wall w, int screenHeight);
 void InitScore(ScoreUI *s, int position, int subLenght, int offset, Color color, Color bgColor);
 void IncreaseScore(ScoreUI *s, float *gameSpeed, int *spawnCounter, int *gameState);
 void DrawScore(ScoreUI s, int midScreen, int gameWidth);

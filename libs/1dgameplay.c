@@ -181,20 +181,23 @@ void DrawWalls(Wall walls[], int wallsDim, int midScreen, int gameWidth)
     }
 }
 
-void DrawWall(Wall *w, int midScreen, int gameWidth)
+void DrawWall(Wall *w, int gameplayInitialPosition, int midScreen, int gameWidth, int screenHeight)
 {
     if ((*w).isActive)
     {
         DrawRectangle1D((*w).position - (*w).lenght, (*w).lenght, (*w).color, midScreen, gameWidth, true);
         DrawRectangle1D((*w).limit.position - (*w).limit.lenght, (*w).limit.lenght, (*w).limit.color, midScreen, gameWidth, true);
+        
+        DrawRectangle1D(gameplayInitialPosition, (*w).lenght, (*w).color, midScreen, gameWidth, true);
+        DrawRectangle1D(screenHeight - (*w).limit.position + gameplayInitialPosition, (*w).limit.lenght, (*w).limit.color, midScreen, gameWidth, true);
     }
 }
 
-bool PlayerWallCollisionDetection(Player p, Wall w)
+bool PlayerWallCollisionDetection(Player p, Wall w, int screenHeight)
 {
     if (w.isActive && w.position - w.lenght <= w.limit.position)
     {
-        if (p.position > w.limit.position)
+        if (p.position > w.limit.position || p.position < screenHeight - w.limit.position)
         {
             // Player has collided with the wall
             
